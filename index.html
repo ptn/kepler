@@ -1,0 +1,85 @@
+<html>
+  <head>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/three.js/r66/three.min.js"></script>
+  </head>
+  <body>
+    <div id="canvas" style="position: absolute; left: 0px; top: 0px; z-index: 1;"></div>
+  </body>
+
+  <script>
+    var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
+    var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 0.1, FAR = 20000;
+
+    function createCamera() {
+      camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
+      camera.position.set(0, 150, 400);
+      return camera;
+    };
+
+    function createRenderer() {
+      renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+      var container = document.getElementById("canvas");
+      container.appendChild(renderer.domElement);
+      return renderer;
+    };
+
+    function createSphere(r, x, y, z, textureUrl) {
+      var geometry = new THREE.SphereGeometry(r, 32, 16);
+      var texture = THREE.ImageUtils.loadTexture(textureUrl);
+      var material = new THREE.MeshBasicMaterial({ map: texture });
+      var sphere = new THREE.Mesh(geometry, material);
+      sphere.position.set(x, y, z);
+      return sphere;
+    };
+
+    // FIXME: this assumes star is at 0 0 0
+    function orbit(planet, star, d) {
+      var angle = planet.angle + 0.03;
+
+      if (angle > 2 * Math.PI) {
+        planet.angle -= 2 * Math.PI;
+      } else {
+        planet.angle = angle;
+      }
+      console.log(angle);
+
+      planet.position.y = Math.sin(angle) * d;
+      planet.position.x = Math.cos(angle) * d;
+    }
+
+    var scene = new THREE.Scene();
+
+    var camera = createCamera();
+    scene.add(camera);
+    // Configure zoom of camera.
+    camera.lookAt(scene.position);
+
+    // Light.
+    var ambientLight = new THREE.AmbientLight(0xCCCCCC);
+    scene.add(ambientLight);
+
+    var renderer = createRenderer();
+
+    var star = createSphere(30, 0, 0, 0, "/fur-wallpaper-8.jpg");
+    scene.add(star);
+    var planet = createSphere(15, 60, 0, 0, "/fur-wallpaper-8.jpg");
+    planet.angle = 0;
+    scene.add(planet);
+
+    function animate() {
+      // render texture
+      renderer.render(scene, camera);
+
+      // rotate star
+      star.rotation.y += 0.05;
+      
+      // make the planet orbit the star
+      orbit(planet, star, 60);
+
+      window.requestAnimationFrame(animate);
+    };
+
+    window.requestAnimationFrame(animate);
+  </script>
+</html>
