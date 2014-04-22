@@ -1,5 +1,17 @@
 // 1 unit here is 1 billion meters in Real Life.
 
+function createStats() {
+  var stats = new Stats();
+  stats.setMode(1); // 0: fps, 1: ms
+
+  // Align top-left
+  stats.domElement.style.position = 'absolute';
+  stats.domElement.style.left = '0px';
+  stats.domElement.style.bottom = '0px';
+  stats.domElement.style.zIndex = '10';
+  return stats;
+}
+
 var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
 var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 0.1, FAR = 20000;
 
@@ -82,7 +94,11 @@ var star = addSphere(3, 0, 0, 0, "/fur-wallpaper-8.jpg", { mass: 1.988435e30 });
 var planet = addSphere(3, 150, 0, 0, "/planet.jpg", { mass: 5.9721986e24 });
 planet.angle = 0;
 
+var stats = createStats();
+document.body.appendChild( stats.domElement );
+
 function animate() {
+  stats.begin();
   // render texture
   renderer.render(scene, camera);
 
@@ -93,6 +109,8 @@ function animate() {
   orbit(planet, star);
 
   window.requestAnimationFrame(animate);
+  stats.end();
 }
 
 window.requestAnimationFrame(animate);
+
