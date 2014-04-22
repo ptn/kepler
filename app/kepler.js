@@ -155,15 +155,15 @@ scene.add(ambientLight);
 var renderer = createRenderer();
 var controls = createControls(renderer);
 
-var sun = addSphere(3, 0, 0, 0, "/fur-wallpaper-8.jpg", { mass: 1.988435e30 });
-var mercury = addSphere(3, 50.32, 0, 0, "/mercury.png", { mass: 3.30104e23, vel: new THREE.Vector3(0, 0, 4.74e-5) });
-var venus = addSphere(3, 108.8, 0, 0, "/mercury.png", { mass: 4.86732e24, vel: new THREE.Vector3(0, 0, 3.5e-5) });
-var earth = addSphere(3, 150, 0, 0, "/planet.jpg", { mass: 5.9721986e24, vel: new THREE.Vector3(0, 0, 2.963e-5) });
-var mars = addSphere(3, 227.94, 0, 0, "/planet.jpg", { mass: 6.41693e23, vel: new THREE.Vector3(0, 0, 0.0000228175) });
-var jupiter = addSphere(3, 778.33, 0, 0, "/planet.jpg",  { mass: 1.89813e27, vel: new THREE.Vector3(0, 0, 0.0000129824) });
-var saturn = addSphere(3, 1429.4, 0, 0, "/planet.jpg",  { mass: 5.68319e26, vel: new THREE.Vector3(0, 0, 9.280e-6) });
-var uranus = addSphere(3, 2870.99, 0, 0, "/planet.jpg",  { mass: 8.68103e25, vel: new THREE.Vector3(0, 0, 6.509e-6) });
-var neptune = addSphere(3, 4504, 0, 0, "/planet.jpg",  { mass: 1.0241e26, vel: new THREE.Vector3(0, 0, 5.449e-6) });
+var sun = addSphere(0.6955, 0, 0, 0, "/fur-wallpaper-8.jpg", { mass: 1.988435e30 });
+var mercury = addSphere(0.0024397, 50.32, 0, 0, "/mercury.png", { mass: 3.30104e23, vel: new THREE.Vector3(0, 0, 4.74e-5) });
+var venus = addSphere(0.0060519, 108.8, 0, 0, "/mercury.png", { mass: 4.86732e24, vel: new THREE.Vector3(0, 0, 3.5e-5) });
+var earth = addSphere(0.0063674447, 150, 0, 0, "/planet.jpg", { mass: 5.9721986e24, vel: new THREE.Vector3(0, 0, 2.963e-5) });
+var mars = addSphere(0.003386, 227.94, 0, 0, "/planet.jpg", { mass: 6.41693e23, vel: new THREE.Vector3(0, 0, 0.0000228175) });
+var jupiter = addSphere(0.069173, 778.33, 0, 0, "/planet.jpg",  { mass: 1.89813e27, vel: new THREE.Vector3(0, 0, 0.0000129824) });
+var saturn = addSphere(0.057316, 1429.4, 0, 0, "/planet.jpg",  { mass: 5.68319e26, vel: new THREE.Vector3(0, 0, 9.280e-6) });
+var uranus = addSphere(0.025266, 2870.99, 0, 0, "/planet.jpg",  { mass: 8.68103e25, vel: new THREE.Vector3(0, 0, 6.509e-6) });
+var neptune = addSphere(0.024553, 4504, 0, 0, "/planet.jpg",  { mass: 1.0241e26, vel: new THREE.Vector3(0, 0, 5.449e-6) });
 earth.angle = 0;
 
 var stats = createStats();
