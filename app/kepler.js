@@ -71,7 +71,7 @@ function getAcceleration(distance, starMass) {
 }
 
 function orbit(planet, star) {
-  for(var i=0; i<10000; i++) {
+  for(var i=0; i < 10000; i++) {
     var speed = getAcceleration(getDistance(star.position, planet.position) * 1000000000, star.astro.mass) * SEC_PER_FRAME;
     var vel = new THREE.Vector3().subVectors(star.position, planet.position).setLength(speed / 1000000000);
     planet.astro.vel.add(vel);
@@ -86,6 +86,8 @@ function orbit(planet, star) {
 }
 
 function updateGhost(planet) {
+  planet.astro.ghost.position.copy(planet.position);
+
   var distance = getDistance(camera.position, planet.position);
   if (distance < 100) {
     planet.astro.ghost.material.opacity = 0;
