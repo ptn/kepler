@@ -21,16 +21,46 @@ function createRenderer() {
 }
 
 function createSphere(r, x, y, z, textureUrl, astro) {
+  if (astro === undefined) {
+    astro = {};
+  }
+
   var geometry = new THREE.SphereGeometry(r, 32, 16);
   var texture = THREE.ImageUtils.loadTexture(textureUrl);
   var material = new THREE.MeshBasicMaterial({ map: texture });
   var sphere = new THREE.Mesh(geometry, material);
   sphere.position.set(x, y, z);
   sphere.astro = astro;
+
+  var ghostGeometry = new THREE.SphereGeometry(1, 32, 16);
+  var ghostTexture = THREE.ImageUtils.loadTexture(textureUrl);
+  var ghostMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.5});
+  var ghostSphere = new THREE.Mesh(ghostGeometry, ghostMaterial);
+  ghostSphere.position.set(x, y, z);
+  sphere.astro.ghost = ghostSphere;
+  return sphere;
+}
+
+function addSphere(r, x, y, z, textureUrl, astro) {
+  var sphere = createSphere(r, x, y, z, textureUrl, astro);
+  scene.add(sphere);
+  scene.add(sphere.astro.ghost);
   return sphere;
 }
 
 function orbit(planet, star) {
+  updateGhost(star);
+  updateGhost(planet);
+}
+
+function updateGhost(planet) {
+  var distance = new THREE.Vector3().copy(camera.position).sub(planet.position).length();
+  if (distance < 100) {
+    planet.astro.ghost.material.opacity = 0;
+  } else {
+    planet.astro.ghost.scale.x = planet.astro.ghost.scale.y = planet.astro.ghost.scale.z = distance/80;
+    planet.astro.ghost.material.opacity = 0.5;
+  }
 }
 
 var scene = new THREE.Scene();
@@ -48,11 +78,9 @@ scene.add(ambientLight);
 
 var renderer = createRenderer();
 
-var star = createSphere(3, 0, 0, 0, "/fur-wallpaper-8.jpg", { mass: 1.988435e30 });
-scene.add(star);
-var planet = createSphere(3, 150, 0, 0, "/planet.jpg", { mass: 5.9721986e24 });
+var star = addSphere(3, 0, 0, 0, "/fur-wallpaper-8.jpg", { mass: 1.988435e30 });
+var planet = addSphere(3, 150, 0, 0, "/planet.jpg", { mass: 5.9721986e24 });
 planet.angle = 0;
-scene.add(planet);
 
 function animate() {
   // render texture
