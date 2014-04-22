@@ -17,7 +17,7 @@ function getDistance(v1, v2) {
 }
 
 var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
-var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 0.1, FAR = 20000;
+var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 0.1, FAR = 200000;
 
 // Astronomy.
 var G = 6.67384e-11; // m3 kg-1 s-2
@@ -143,9 +143,16 @@ scene.add(ambientLight);
 
 var renderer = createRenderer();
 
-var star = addSphere(3, 0, 0, 0, "/fur-wallpaper-8.jpg", { mass: 1.988435e30 });
-var planet = addSphere  (3, 150, 0, 0, "/planet.jpg", { mass: 5.9721986e24, vel: new THREE.Vector3(0, 0, 2.963e-5) });
-planet.angle = 0;
+var sun = addSphere(3, 0, 0, 0, "/fur-wallpaper-8.jpg", { mass: 1.988435e30 });
+var mercury = addSphere(3, 50.32, 0, 0, "/mercury.png", { mass: 3.30104e23, vel: new THREE.Vector3(0, 0, 4.74e-5) });
+var venus = addSphere(3, 108.8, 0, 0, "/mercury.png", { mass: 4.86732e24, vel: new THREE.Vector3(0, 0, 3.5e-5) });
+var earth = addSphere(3, 150, 0, 0, "/planet.jpg", { mass: 5.9721986e24, vel: new THREE.Vector3(0, 0, 2.963e-5) });
+var mars = addSphere(3, 227.94, 0, 0, "/planet.jpg", { mass: 6.41693e23, vel: new THREE.Vector3(0, 0, 0.0000228175) });
+var jupiter = addSphere(3, 778.33, 0, 0, "/planet.jpg",  { mass: 1.89813e27, vel: new THREE.Vector3(0, 0, 0.0000129824) });
+var saturn = addSphere(3, 1429.4, 0, 0, "/planet.jpg",  { mass: 5.68319e26, vel: new THREE.Vector3(0, 0, 9.280e-6) });
+var uranus = addSphere(3, 2870.99, 0, 0, "/planet.jpg",  { mass: 8.68103e25, vel: new THREE.Vector3(0, 0, 6.509e-6) });
+var neptune = addSphere(3, 4504, 0, 0, "/planet.jpg",  { mass: 1.0241e26, vel: new THREE.Vector3(0, 0, 5.449e-6) });
+earth.angle = 0;
 
 var stats = createStats();
 document.body.appendChild( stats.domElement );
@@ -156,10 +163,17 @@ function animate() {
   renderer.render(scene, camera);
 
   // rotate star
-  star.rotation.y += 0.05;
+  sun.rotation.y += 0.05;
 
   // make the planet orbit the star
-  orbit(planet, star);
+  orbit(mercury, sun);
+  orbit(venus, sun);
+  orbit(earth, sun);
+  orbit(mars, sun);
+  orbit(jupiter, sun);
+  orbit(saturn, sun);
+  orbit(uranus, sun);
+  orbit(neptune, sun);
 
   window.requestAnimationFrame(animate);
   stats.end();
