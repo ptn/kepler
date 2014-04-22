@@ -12,11 +12,16 @@ function createStats() {
   return stats;
 }
 
+function getDistance(v1, v2) {
+  return new THREE.Vector3().copy(v1).sub(v2).length();
+}
+
 var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
 var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 0.1, FAR = 20000;
 
 // Astronomy.
 var G = 6.67384e-11; // m3 kg-1 s-2
+var SEC_PER_FRAME = 8;
 
 function createCamera() {
   camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
@@ -43,6 +48,7 @@ function createSphere(r, x, y, z, textureUrl, astro) {
   var sphere = new THREE.Mesh(geometry, material);
   sphere.position.set(x, y, z);
   sphere.astro = astro;
+  sphere.astro.vel = new THREE.Vector3();
 
   var ghostGeometry = new THREE.SphereGeometry(1, 32, 16);
   var ghostTexture = THREE.ImageUtils.loadTexture(textureUrl);
@@ -60,13 +66,27 @@ function addSphere(r, x, y, z, textureUrl, astro) {
   return sphere;
 }
 
+function getAcceleration(distance, starMass) {
+  return G * starMass / (Math.pow(distance, 2));
+}
+
 function orbit(planet, star) {
+  for(var i=0; i<10000; i++) {
+    var speed = getAcceleration(getDistance(star.position, planet.position) * 1000000000, star.astro.mass) * SEC_PER_FRAME;
+    var vel = new THREE.Vector3().subVectors(star.position, planet.position).setLength(speed / 1000000000);
+    planet.astro.vel.add(vel);
+
+    planet.position.x += planet.astro.vel.x;
+    planet.position.y += planet.astro.vel.y;
+    planet.position.z += planet.astro.vel.z;
+  }
+
   updateGhost(star);
   updateGhost(planet);
 }
 
 function updateGhost(planet) {
-  var distance = new THREE.Vector3().copy(camera.position).sub(planet.position).length();
+  var distance = getDistance(camera.position, planet.position);
   if (distance < 100) {
     planet.astro.ghost.material.opacity = 0;
   } else {
@@ -91,7 +111,7 @@ scene.add(ambientLight);
 var renderer = createRenderer();
 
 var star = addSphere(3, 0, 0, 0, "/fur-wallpaper-8.jpg", { mass: 1.988435e30 });
-var planet = addSphere(3, 150, 0, 0, "/planet.jpg", { mass: 5.9721986e24 });
+var planet = addSphere  (3, 150, 0, 0, "/planet.jpg", { mass: 5.9721986e24 });
 planet.angle = 0;
 
 var stats = createStats();
