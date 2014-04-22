@@ -100,6 +100,10 @@ function updateVelocity(planet, star) {
     planet.position.x += planet.astro.vel.x * SEC_PER_STEP;
     planet.position.y += planet.astro.vel.y * SEC_PER_STEP;
     planet.position.z += planet.astro.vel.z * SEC_PER_STEP;
+
+    if (i % 10000 === 0) {
+      leaveTrail(planet);
+    }
   }
 }
 
@@ -113,8 +117,6 @@ function orbit(planet, star) {
   updateVelocity(planet, star);
   updateGhost(star);
   updateGhost(planet);
-
-  leaveTrail(planet);
 }
 
 function updateGhost(planet) {
@@ -129,19 +131,29 @@ function updateGhost(planet) {
   }
 }
 
+function createControls(renderer) {
+  var controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+  var slider = document.getElementById("speedSlider");
+  slider.onchange = function(e) {
+    STEPS_PER_FRAME = +this.value;
+  };
+
+  return controls;
+}
+
 var scene = new THREE.Scene();
 
 var camera = createCamera();
 scene.add(camera);
 camera.lookAt(scene.position);
 
-var controls = new THREE.OrbitControls(camera);
-
 // Light.
 var ambientLight = new THREE.AmbientLight(0xCCCCCC);
 scene.add(ambientLight);
 
 var renderer = createRenderer();
+var controls = createControls(renderer);
 
 var sun = addSphere(3, 0, 0, 0, "/fur-wallpaper-8.jpg", { mass: 1.988435e30 });
 var mercury = addSphere(3, 50.32, 0, 0, "/mercury.png", { mass: 3.30104e23, vel: new THREE.Vector3(0, 0, 4.74e-5) });

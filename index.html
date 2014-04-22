@@ -6,7 +6,13 @@
   </head>
   <body>
     <div id="canvas" style="position: absolute; left: 0px; top: 0px; z-index: 1;"></div>
+
+    <div id="speed" style="z-index: 1; position: absolute; color: red;">
+      <label for="speedSlider">Speed</label>
+      <input id="speedSlider" type="range" min="1000" max="50000" value="10000" />
+    </div>
   </body>
 
   <script src="/app/kepler.js"></script>
+
 </html>
