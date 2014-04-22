@@ -21,11 +21,12 @@ var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 0.1, FAR = 20
 
 // Astronomy.
 var G = 6.67384e-11; // m3 kg-1 s-2
-var SEC_PER_FRAME = 8;
+var SEC_PER_STEP = 8;
+var STEPS_PER_FRAME = 10000;
 
 function createCamera() {
   camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
-  camera.position.set(0, 20, 0);
+  camera.position.set(0, 500, 0);
   return camera;
 }
 
@@ -41,6 +42,9 @@ function createSphere(r, x, y, z, textureUrl, astro) {
   if (astro === undefined) {
     astro = {};
   }
+  if (astro.vel === undefined) {
+    astro.vel = new THREE.Vector3();
+  }
 
   var geometry = new THREE.SphereGeometry(r, 32, 16);
   var texture = THREE.ImageUtils.loadTexture(textureUrl);
@@ -48,7 +52,6 @@ function createSphere(r, x, y, z, textureUrl, astro) {
   var sphere = new THREE.Mesh(geometry, material);
   sphere.position.set(x, y, z);
   sphere.astro = astro;
-  sphere.astro.vel = new THREE.Vector3();
 
   var ghostGeometry = new THREE.SphereGeometry(1, 32, 16);
   var ghostTexture = THREE.ImageUtils.loadTexture(textureUrl);
@@ -71,14 +74,14 @@ function getAcceleration(distance, starMass) {
 }
 
 function orbit(planet, star) {
-  for(var i=0; i < 10000; i++) {
-    var speed = getAcceleration(getDistance(star.position, planet.position) * 1000000000, star.astro.mass) * SEC_PER_FRAME;
+  for(var i=0; i < STEPS_PER_FRAME; i++) {
+    var speed = getAcceleration(getDistance(star.position, planet.position) * 1000000000, star.astro.mass) * SEC_PER_STEP;
     var vel = new THREE.Vector3().subVectors(star.position, planet.position).setLength(speed / 1000000000);
     planet.astro.vel.add(vel);
 
-    planet.position.x += planet.astro.vel.x;
-    planet.position.y += planet.astro.vel.y;
-    planet.position.z += planet.astro.vel.z;
+    planet.position.x += planet.astro.vel.x * SEC_PER_STEP;
+    planet.position.y += planet.astro.vel.y * SEC_PER_STEP;
+    planet.position.z += planet.astro.vel.z * SEC_PER_STEP;
   }
 
   updateGhost(star);
@@ -101,7 +104,6 @@ var scene = new THREE.Scene();
 
 var camera = createCamera();
 scene.add(camera);
-// Configure zoom of camera.
 camera.lookAt(scene.position);
 
 var controls = new THREE.OrbitControls(camera);
@@ -113,7 +115,7 @@ scene.add(ambientLight);
 var renderer = createRenderer();
 
 var star = addSphere(3, 0, 0, 0, "/fur-wallpaper-8.jpg", { mass: 1.988435e30 });
-var planet = addSphere  (3, 150, 0, 0, "/planet.jpg", { mass: 5.9721986e24 });
+var planet = addSphere  (3, 150, 0, 0, "/planet.jpg", { mass: 5.9721986e24, vel: new THREE.Vector3(0, 0, 2.963e-5) });
 planet.angle = 0;
 
 var stats = createStats();
@@ -135,4 +137,3 @@ function animate() {
 }
 
 window.requestAnimationFrame(animate);
-
