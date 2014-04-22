@@ -23,6 +23,11 @@ var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 0.1, FAR = 20
 var G = 6.67384e-11; // m3 kg-1 s-2
 var SEC_PER_STEP = 8;
 var STEPS_PER_FRAME = 10000;
+var METERS_PER_UNIT = 1000000000;
+var MAX_TRAIL_VERTICES = 400;
+var MIN_GHOST_DISTANCE = 100;
+var GHOST_DISTANCE_SCALE = 80;
+var MAX_GHOST_OPACITY = 0.15;
 
 function createCamera() {
   camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
@@ -40,7 +45,7 @@ function createRenderer() {
 
 function createTrail(x, y, z) {
   var trailGeometry = new THREE.Geometry();
-  for (i = 0; i < 400; i++) {
+  for (i = 0; i < MAX_TRAIL_VERTICES; i++) {
     trailGeometry.vertices.push(new THREE.Vector3(x, y, z));
   }
   var trailMaterial = new THREE.LineBasicMaterial();
@@ -67,7 +72,7 @@ function createSphere(r, x, y, z, textureUrl, astro) {
 
   var ghostGeometry = new THREE.SphereGeometry(1, 32, 16);
   var ghostTexture = THREE.ImageUtils.loadTexture(textureUrl);
-  var ghostMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.5});
+  var ghostMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0});
   var ghostSphere = new THREE.Mesh(ghostGeometry, ghostMaterial);
   ghostSphere.position.set(x, y, z);
   sphere.astro.ghost = ghostSphere;
@@ -88,8 +93,8 @@ function getAcceleration(distance, starMass) {
 
 function updateVelocity(planet, star) {
   for(var i=0; i < STEPS_PER_FRAME; i++) {
-    var speed = getAcceleration(getDistance(star.position, planet.position) * 1000000000, star.astro.mass) * SEC_PER_STEP;
-    var vel = new THREE.Vector3().subVectors(star.position, planet.position).setLength(speed / 1000000000);
+    var speed = getAcceleration(getDistance(star.position, planet.position) * METERS_PER_UNIT, star.astro.mass) * SEC_PER_STEP;
+    var vel = new THREE.Vector3().subVectors(star.position, planet.position).setLength(speed / METERS_PER_UNIT);
     planet.astro.vel.add(vel);
 
     planet.position.x += planet.astro.vel.x * SEC_PER_STEP;
@@ -100,7 +105,7 @@ function updateVelocity(planet, star) {
 
 function leaveTrail(sphere) {
   sphere.astro.trail.geometry.vertices.unshift(new THREE.Vector3().copy(sphere.position));
-  sphere.astro.trail.geometry.vertices.length = 400;
+  sphere.astro.trail.geometry.vertices.length = MAX_TRAIL_VERTICES;
   sphere.astro.trail.geometry.verticesNeedUpdate = true;
 }
 
@@ -116,11 +121,11 @@ function updateGhost(planet) {
   planet.astro.ghost.position.copy(planet.position);
 
   var distance = getDistance(camera.position, planet.position);
-  if (distance < 100) {
+  if (distance < MIN_GHOST_DISTANCE) {
     planet.astro.ghost.material.opacity = 0;
   } else {
-    planet.astro.ghost.scale.x = planet.astro.ghost.scale.y = planet.astro.ghost.scale.z = distance/80;
-    planet.astro.ghost.material.opacity = 0.5;
+    planet.astro.ghost.scale.x = planet.astro.ghost.scale.y = planet.astro.ghost.scale.z = distance/GHOST_DISTANCE_SCALE;
+    planet.astro.ghost.material.opacity = MAX_GHOST_OPACITY;
   }
 }
 
