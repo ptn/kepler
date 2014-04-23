@@ -13,7 +13,10 @@ function createStats() {
 }
 
 function getDistance(v1, v2) {
-  return new THREE.Vector3().copy(v1).sub(v2).length();
+  var x = v1.x - v2.x;
+  var y = v1.y - v2.y;
+  var z = v1.z - v2.z;
+  return Math.sqrt(x * x + y * y + z * z);
 }
 
 var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
@@ -92,9 +95,11 @@ function getAcceleration(distance, starMass) {
 }
 
 function updateVelocity(planet, star) {
+  var vel = new THREE.Vector3();
+  var speed;
   for(var i=0; i < STEPS_PER_FRAME; i++) {
-    var speed = getAcceleration(getDistance(star.position, planet.position) * METERS_PER_UNIT, star.astro.mass) * SEC_PER_STEP;
-    var vel = new THREE.Vector3().subVectors(star.position, planet.position).setLength(speed / METERS_PER_UNIT);
+    speed = getAcceleration(getDistance(star.position, planet.position) * METERS_PER_UNIT, star.astro.mass) * SEC_PER_STEP;
+    vel.subVectors(star.position, planet.position).setLength(speed / METERS_PER_UNIT);
     planet.astro.vel.add(vel);
 
     planet.position.x += planet.astro.vel.x * SEC_PER_STEP;
@@ -171,6 +176,7 @@ document.body.appendChild( stats.domElement );
 
 function animate() {
   stats.begin();
+
   // render texture
   renderer.render(scene, camera);
 
