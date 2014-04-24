@@ -221,6 +221,13 @@ document.getElementById('new-planet').onclick = function(e) {
   document.getElementById("planets").appendChild(node);
 };
 
+function runSimulation() {
+  document.getElementById("input").style.display = "none";
+  document.getElementById("model").style.display = "block";
+  PAUSED = false;
+  window.requestAnimationFrame(animate);
+}
+
 document.getElementById('form').onsubmit = function(e) {
   e.preventDefault();
 
@@ -251,10 +258,54 @@ document.getElementById('form').onsubmit = function(e) {
 
   sun = addSphere(starRadius, 0, 0, 0, "/bhushan.jpg", { mass: starMass })
 
-  document.getElementById("input").style.display = "none";
-  document.getElementById("model").style.display = "block";
-  PAUSED = false;
-  window.requestAnimationFrame(animate);
+  runSimulation();
+}
+
+function simulateHome() {
+  sun = addSphere(3, 0, 0, 0, "/fur-wallpaper-8.jpg", { mass: 1.988435e30 });
+
+  planets.push(addSphere(3, 50.32, 0, 0, "/mercury.png", { mass: 3.30104e23, vel: new THREE.Vector3(0, 0, 4.74e-5) }));
+  planets.push(addSphere(3, 108.8, 0, 0, "/mercury.png", { mass: 4.86732e24, vel: new THREE.Vector3(0, 0, 3.5e-5) }));
+  planets.push(addSphere(3, 150, 0, 0, "/planet.jpg", { mass: 5.9721986e24, vel: new THREE.Vector3(0, 0, 2.963e-5) }));
+  planets.push(addSphere(3, 227.94, 0, 0, "/planet.jpg", { mass: 6.41693e23, vel: new THREE.Vector3(0, 0, 0.0000228175) }));
+  planets.push(addSphere(3, 778.33, 0, 0, "/planet.jpg",  { mass: 1.89813e27, vel: new THREE.Vector3(0, 0, 0.0000129824) }));
+  planets.push(addSphere(3, 1429.4, 0, 0, "/planet.jpg",  { mass: 5.68319e26, vel: new THREE.Vector3(0, 0, 9.280e-6) }));
+  planets.push(addSphere(3, 2870.99, 0, 0, "/planet.jpg",  { mass: 8.68103e25, vel: new THREE.Vector3(0, 0, 6.509e-6) }));
+  planets.push(addSphere(3, 4504, 0, 0, "/planet.jpg",  { mass: 1.0241e26, vel: new THREE.Vector3(0, 0, 5.449e-6) }));
+
+  runSimulation();
+}
+
+function simulateJupiter() {
+  sun = addSphere(3, 0, 0, 0, "/fur-wallpaper-8.jpg", { mass: 1.988435e30 });
+
+  // Earth for reference.
+  planets.push(addSphere(3, 150, 0, 0, "/planet.jpg", { mass: 5.9721986e24, vel: new THREE.Vector3(0, 0, 2.963e-5) }));
+  // Jupiter at Mars' distance.
+  planets.push(addSphere(3, 227.94, 0, 0, "/planet.jpg",  { mass: 1.89813e27, vel: new THREE.Vector3(0, 0, 0.0000129824) }));
+
+  runSimulation();
+}
+
+function simulateMercury() {
+  sun = addSphere(3, 0, 0, 0, "/fur-wallpaper-8.jpg", { mass: 1.988435e30 });
+
+  // Earth for reference.
+  planets.push(addSphere(3, 150, 0, 0, "/planet.jpg", { mass: 5.9721986e24, vel: new THREE.Vector3(0, 0, 2.963e-5) }));
+  // Mercury at Mars' distance.
+  planets.push(addSphere(3, 227.94, 0, 0, "/mercury.png", { mass: 3.30104e23, vel: new THREE.Vector3(0, 0, 4.74e-5) }));
+
+  runSimulation();
+}
+
+document.getElementById('preload').onchange = function(e) {
+  if (this.value === 'home') {
+    simulateHome();
+  } else if (this.value === 'jupiter') {
+    simulateJupiter();
+  } else if (this.value === 'mercury') {
+    simulateMercury();
+  }
 }
 
 function togglePause() {
