@@ -219,7 +219,7 @@ document.getElementById('new-planet').onclick = function(e) {
   node.id = "planet-" + planetId;
   node.innerHTML = html;
   document.getElementById("planets").appendChild(node);
-}
+};
 
 document.getElementById('form').onsubmit = function(e) {
   e.preventDefault();
@@ -245,11 +245,11 @@ document.getElementById('form').onsubmit = function(e) {
                            Math.cos(planetIncl / 180 * Math.PI) * planetDistance,
                            Math.sin(planetIncl / 180 * Math.PI) * planetDistance,
                            0,
-                           "/planet.jpg",
+                           "/bhushan.jpg",
                            { mass: planetMass, vel: new THREE.Vector3(0, 0, planetSpeed) }));
   }
 
-  sun = addSphere(starRadius, 0, 0, 0, "/fur-wallpaper-8.jpg", { mass: starMass })
+  sun = addSphere(starRadius, 0, 0, 0, "/bhushan.jpg", { mass: starMass })
 
   document.getElementById("input").style.display = "none";
   document.getElementById("model").style.display = "block";
