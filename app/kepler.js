@@ -160,8 +160,7 @@ scene.add(ambientLight);
 var renderer = createRenderer();
 var controls = createControls(renderer);
 
-var sun = addSphere(0.6955, 0, 0, 0, "/fur-wallpaper-8.jpg", { mass: 1.988435e30 });
-
+var sun;
 var planets = [];
 
 var stats = createStats();
@@ -173,13 +172,15 @@ function animate() {
   // render texture
   renderer.render(scene, camera);
 
-  sun.rotation.y += 0.05;
+  if (sun) {
+    sun.rotation.y += 0.05;
 
-  for (var i = 0; i < planets.length; i++) {
-    orbit(planets[i], sun);
+    for (var i = 0; i < planets.length; i++) {
+      orbit(planets[i], sun);
+    }
+
+    window.requestAnimationFrame(animate);
   }
-
-  window.requestAnimationFrame(animate);
   stats.end();
 }
 

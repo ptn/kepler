@@ -7,6 +7,8 @@
   <body>
     <div id="ui">
       <form id="form">
+        <h2>Create a star and some planets:</h2>
+
         <label for="star-mass">Star mass: </label>
         <input type="text" id="star-mass" name="star-mass" placeholder="1.988435e30" /> kg
         <br />
@@ -17,8 +19,73 @@
         <input type="text" id="planet-distance-1" name="planet-distance-1" placeholder="0.0063674447" /> Gm
         <br />
 
+        <br />
         <input type="Submit" value="Create solar system" />
       </form>
+
+      Reference:
+      <table cellspacing="0" border="1">
+        <tr>
+          <th></th>
+          <th>Radius (Gm)</th>
+          <th>Mass (kg)</th>
+          <th>Distance (Gm)</th>
+        </tr>
+        <tr>
+          <td>Sun</td>
+          <td>0.6955</td>
+          <td>1.988435e30</td>
+          <td>--</td>
+        </tr>
+        <tr>
+          <td>Mercury</td>
+          <td>0.0024397</td>
+          <td>3.30104e23</td>
+          <td>50.32</td>
+        </tr>
+        <tr>
+          <td>Venus</td>
+          <td>0.0060519</td>
+          <td>4.86732e24</td>
+          <td>108.8</td>
+        </tr>
+        <tr>
+          <td>Earth</td>
+          <td>0.0063674447</td>
+          <td>5.9721986e24</td>
+          <td>150</td>
+        </tr>
+        <tr>
+          <td>Mars</td>
+          <td>0.003386</td>
+          <td>6.41693e23</td>
+          <td>227.94</td>
+        </tr>
+        <tr>
+          <td>Jupiter</td>
+          <td>0.069173</td>
+          <td>1.89813e27</td>
+          <td>778.33</td>
+        </tr>
+        <tr>
+          <td>Saturn</td>
+          <td>0.057316</td>
+          <td>5.68319e26</td>
+          <td>1429.4</td>
+        </tr>
+        <tr>
+          <td>Uranus</td>
+          <td>0.025266</td>
+          <td>8.68103e25</td>
+          <td>2870.99</td>
+        </tr>
+        <tr>
+          <td>Neptune</td>
+          <td>0.024553</td>
+          <td>1.0241e26</td>
+          <td>4504</td>
+        </tr>
+      </table>
     </div>
 
     <div id="model" style="display: none;">
