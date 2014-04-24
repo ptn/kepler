@@ -211,6 +211,9 @@ document.getElementById('new-planet').onclick = function(e) {
   html += '<label for="planet-speed-' + planetId + '">Speed: </label>';
   html += '<input type="text" id="planet-speed-' + planetId + '" name="planet-speed-' + planetId + '" placeholder="5.449e-6" /> Gm';
   html += '<br />';
+  html += '<label for="planet-incl-' + planetId + '">Inclination: </label>';
+  html += '<input type="text" id="planet-incl-' + planetId + '" name="planet-incl-' + planetId + '" placeholder="0" /> deg';
+  html += '<br />';
 
   var node = document.createElement("fieldset");
   node.id = "planet-" + planetId;
@@ -235,8 +238,14 @@ document.getElementById('form').onsubmit = function(e) {
     if (!planetDistance) { return; }
     var planetSpeed = extractNumber("planet-speed-" + i, "the initial speed of planet" + i);
     if (!planetSpeed) { return; }
+    var planetIncl = extractNumber("planet-incl-" + i, "the initial inclination of planet" + i);
+    if (Number.isNaN(planetIncl)) { return; }
 
-    planets.push(addSphere(planetRadius, planetDistance, 0, 0, "/planet.jpg",
+    planets.push(addSphere(planetRadius,
+                           Math.cos(planetIncl / 180 * Math.PI) * planetDistance,
+                           Math.sin(planetIncl / 180 * Math.PI) * planetDistance,
+                           0,
+                           "/planet.jpg",
                            { mass: planetMass, vel: new THREE.Vector3(0, 0, planetSpeed) }));
   }
 
