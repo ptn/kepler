@@ -197,12 +197,23 @@ document.getElementById('form').onsubmit = function(e) {
 
   var starMass = extractNumber("star-mass", "the mass of the star");
   if (!starMass) { return; }
+  var starRadius = extractNumber("star-radius", "the radius of the star");
+  if (!starRadius) { return; }
 
   var planetMass = extractNumber("planet-mass-1", "the mass of the planet");
   if (!planetMass) { return; }
-
+  var planetRadius = extractNumber("planet-radius-1", "the radius of the planet");
+  if (!planetRadius) { return; }
   var planetDistance = extractNumber("planet-distance-1", "the distance from the planet to the star");
   if (!planetDistance) { return; }
+  var planetSpeed = extractNumber("planet-speed-1", "the initial speed of the planet");
+  if (!planetSpeed) { return; }
 
-  // window.requestAnimationFrame(animate);
+  sun = addSphere(starRadius, 0, 0, 0, "/fur-wallpaper-8.jpg", { mass: starMass })
+  planets.push(addSphere(planetRadius, planetDistance, 0, 0, "/planet.jpg",
+                         { mass: planetMass, vel: new THREE.Vector3(0, 0, planetSpeed) }));
+
+  document.getElementById("input").style.display = "none";
+  document.getElementById("model").style.display = "block";
+  window.requestAnimationFrame(animate);
 }
