@@ -172,7 +172,7 @@ var neptune = addSphere(0.024553, 4504, 0, 0, "/planet.jpg",  { mass: 1.0241e26,
 earth.angle = 0;
 
 var stats = createStats();
-document.body.appendChild( stats.domElement );
+document.getElementById("model").appendChild( stats.domElement );
 
 function animate() {
   stats.begin();
@@ -197,4 +197,25 @@ function animate() {
   stats.end();
 }
 
-window.requestAnimationFrame(animate);
+function extractNumber(formElementId, errorMsg) {
+  var value = +document.forms["form"][formElementId].value;
+
+  if (!value) {
+    alert("Insert a valid number for " + errorMsg);
+  }
+
+  return value;
+}
+
+document.getElementById('form').onsubmit = function(e) {
+  e.preventDefault();
+
+  var starMass = extractNumber("star-mass", "the mass of the star");
+  if (!starMass) { return; }
+  var planetMass = extractNumber("planet-mass-1", "the mass of the planet");
+  if (!planetMass) { return; }
+  var planetDistance = extractNumber("planet-distance-1", "the distance from the planet to the star");
+  if (!planetDistance) { return; }
+
+  // window.requestAnimationFrame(animate);
+}

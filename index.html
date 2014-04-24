@@ -5,11 +5,30 @@
     <script type="text/javascript" src="/lib/stats.js"></script>
   </head>
   <body>
-    <div id="canvas" style="position: absolute; left: 0px; top: 0px; z-index: 1;"></div>
+    <div id="ui">
+      <form id="form">
+        <label for="star-mass">Star mass: </label>
+        <input type="text" id="star-mass" name="star-mass" placeholder="1.988435e30" /> kg
+        <br />
+        <label for="planet-mass-1">Planet mass #1: </label>
+        <input type="text" id="planet-mass-1" name="planet-mass-1" placeholder="5.9721986e24" /> kg
+        <br />
+        <label for="planet-distance-1">Planet distance #1: </label>
+        <input type="text" id="planet-distance-1" name="planet-distance-1" placeholder="0.0063674447" /> Gm
+        <br />
 
-    <div id="speed" style="z-index: 1; position: absolute; color: red;">
-      <label for="speedSlider">Speed</label>
-      <input id="speedSlider" type="range" min="1000" max="50000" value="10000" />
+        <input type="Submit" value="Create solar system" />
+      </form>
+    </div>
+
+    <div id="model" style="display: none;">
+      <div id="canvas" style="position: absolute; left: 0px; top: 0px; z-index: 1;"></div>
+
+      <div id="speed" style="z-index: 1; position: absolute; color: red;">
+        <label for="speedSlider">Speed</label>
+        <input id="speedSlider" type="range" min="1000" max="50000" value="10000" />
+      </div>
+
     </div>
   </body>
 
