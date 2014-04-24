@@ -31,6 +31,7 @@ var MAX_TRAIL_VERTICES = 400;
 var MIN_GHOST_DISTANCE = 100;
 var GHOST_DISTANCE_SCALE = 80;
 var MAX_GHOST_OPACITY = 0.15;
+var PAUSED = false;
 
 function createCamera() {
   camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
@@ -172,15 +173,14 @@ function animate() {
   // render texture
   renderer.render(scene, camera);
 
-  if (sun) {
+  if (sun && PAUSED === false) {
     sun.rotation.y += 0.05;
 
     for (var i = 0; i < planets.length; i++) {
       orbit(planets[i], sun);
     }
-
-    window.requestAnimationFrame(animate);
   }
+  window.requestAnimationFrame(animate);
   stats.end();
 }
 
@@ -254,4 +254,8 @@ document.getElementById('form').onsubmit = function(e) {
   document.getElementById("input").style.display = "none";
   document.getElementById("model").style.display = "block";
   window.requestAnimationFrame(animate);
+}
+
+function togglePause() {
+  PAUSED = !PAUSED;
 }

@@ -123,9 +123,10 @@
     <div id="model" style="display: none;">
       <div id="canvas" style="position: absolute; left: 0px; top: 0px; z-index: 1;"></div>
 
-      <div id="speed" style="z-index: 1; position: absolute; color: red;">
+      <div id="speed" style="z-index: 1; position: absolute; color: red; font-family: Helvetica, sans-serif;">
         <label for="speedSlider">Speed</label>
         <input id="speedSlider" type="range" min="1000" max="50000" value="10000" />
+        <a href="#" style="color: #f00;" id="pauseButton" onclick="togglePause()">Pause</a>
       </div>
 
     </div>
