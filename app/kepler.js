@@ -252,7 +252,7 @@ document.getElementById('form').onsubmit = function(e) {
                            Math.cos(planetIncl / 180 * Math.PI) * planetDistance,
                            Math.sin(planetIncl / 180 * Math.PI) * planetDistance,
                            0,
-                           "/bhushan.jpg",
+                           "/planet.jpg",
                            { mass: planetMass, vel: new THREE.Vector3(0, 0, planetSpeed) }));
   }
 
@@ -262,7 +262,7 @@ document.getElementById('form').onsubmit = function(e) {
 }
 
 function simulateHome() {
-  sun = addSphere(3, 0, 0, 0, "/fur-wallpaper-8.jpg", { mass: 1.988435e30 });
+  sun = addSphere(3, 0, 0, 0, "/bhushan.jpg", { mass: 1.988435e30 });
 
   planets.push(addSphere(3, 50.32, 0, 0, "/mercury.png", { mass: 3.30104e23, vel: new THREE.Vector3(0, 0, 4.74e-5) }));
   planets.push(addSphere(3, 108.8, 0, 0, "/mercury.png", { mass: 4.86732e24, vel: new THREE.Vector3(0, 0, 3.5e-5) }));
@@ -277,7 +277,7 @@ function simulateHome() {
 }
 
 function simulateJupiter() {
-  sun = addSphere(3, 0, 0, 0, "/fur-wallpaper-8.jpg", { mass: 1.988435e30 });
+  sun = addSphere(3, 0, 0, 0, "/bhushan.jpg", { mass: 1.988435e30 });
 
   // Earth for reference.
   planets.push(addSphere(3, 150, 0, 0, "/planet.jpg", { mass: 5.9721986e24, vel: new THREE.Vector3(0, 0, 2.963e-5) }));
@@ -288,7 +288,7 @@ function simulateJupiter() {
 }
 
 function simulateMercury() {
-  sun = addSphere(3, 0, 0, 0, "/fur-wallpaper-8.jpg", { mass: 1.988435e30 });
+  sun = addSphere(3, 0, 0, 0, "/bhushan.jpg", { mass: 1.988435e30 });
 
   // Earth for reference.
   planets.push(addSphere(3, 150, 0, 0, "/planet.jpg", { mass: 5.9721986e24, vel: new THREE.Vector3(0, 0, 2.963e-5) }));
@@ -306,7 +306,7 @@ document.getElementById('preload').onchange = function(e) {
   } else if (this.value === 'mercury') {
     simulateMercury();
   }
-}
+};
 
 function togglePause() {
   PAUSED = !PAUSED;
@@ -322,5 +322,8 @@ document.getElementById("resetButton").onclick = function() {
     scene.remove(planets[p].astro.trail);
     scene.remove(planets[p]);
   }
+  scene.remove(sun.astro.ghost);
   scene.remove(sun);
+  planets = [];
+  sun = null;
 };
