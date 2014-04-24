@@ -9,30 +9,37 @@
       <form id="form">
         <h2>Create a star and some planets:</h2>
 
-        <label for="star-mass">Star mass: </label>
-        <input type="text" id="star-mass" name="star-mass" placeholder="1.988435e30" /> kg
-        <br />
-        <label for="star-radius">Star radius: </label>
-        <input type="text" id="star-radius" name="star-radius" placeholder="0.6955" /> Gm
-        <br />
+        <fieldset id="star">
+          <legend>Star</legend>
+          <label for="star-mass">Mass: </label>
+          <input type="text" id="star-mass" name="star-mass" placeholder="1.988435e30" /> kg
+          <br />
+          <label for="star-radius">Radius: </label>
+          <input type="text" id="star-radius" name="star-radius" placeholder="0.6955" /> Gm
+          <br />
+        </fieldset>
 
-        <hr>
-
-        <label for="planet-mass-1">Planet mass #1: </label>
-        <input type="text" id="planet-mass-1" name="planet-mass-1" placeholder="5.9721986e24" /> kg
-        <br />
-        <label for="planet-distance-1">Planet distance #1: </label>
-        <input type="text" id="planet-distance-1" name="planet-distance-1" placeholder="150" /> Gm
-        <br />
-        <label for="planet-radius-1">Planet radius #1: </label>
-        <input type="text" id="planet-radius-1" name="planet-radius-1" placeholder="0.0063674447" /> Gm
-        <br />
-        <label for="planet-speed-1">Planet speed #1: </label>
-        <input type="text" id="planet-speed-1" name="planet-speed-1" placeholder="5.449e-6" /> Gm
-        <br />
+        <div id="planets">
+          <fieldset id="planet-1">
+            <legend>Planet #1</legend>
+            <label for="planet-mass-1">Mass: </label>
+            <input type="text" id="planet-mass-1" name="planet-mass-1" placeholder="5.9721986e24" /> kg
+            <br />
+            <label for="planet-distance-1">Distance: </label>
+            <input type="text" id="planet-distance-1" name="planet-distance-1" placeholder="150" /> Gm
+            <br />
+            <label for="planet-radius-1">Radius: </label>
+            <input type="text" id="planet-radius-1" name="planet-radius-1" placeholder="0.0063674447" /> Gm
+            <br />
+            <label for="planet-speed-1">Speed: </label>
+            <input type="text" id="planet-speed-1" name="planet-speed-1" placeholder="5.449e-6" /> Gm
+            <br />
+          </fieldset>
+        </div>
 
         <br />
         <input type="Submit" value="Create solar system" />
+        <a id="new-planet" href="#">Add a new planet</a>
       </form>
 
       Reference:

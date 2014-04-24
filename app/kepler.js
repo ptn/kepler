@@ -192,6 +192,32 @@ function extractNumber(formElementId, errorMsg) {
   return value;
 }
 
+var planetId = 1;
+document.getElementById('new-planet').onclick = function(e) {
+  e.preventDefault();
+
+  planetId += 1;
+
+  var html = '<legend>Planet #' + planetId + '</legend>';
+  html += '<label for="planet-mass-' + planetId + '">Mass: </label>';
+  html += '<input type="text" id="planet-mass-' + planetId + '" name="planet-mass-' + planetId + '" placeholder="5.9721986e24" /> kg';
+  html += '<br />';
+  html += '<label for="planet-distance-' + planetId + '">Distance: </label>';
+  html += '<input type="text" id="planet-distance-' + planetId + '" name="planet-distance-' + planetId + '" placeholder="150" /> Gm';
+  html += '<br />';
+  html += '<label for="planet-radius-' + planetId + '">Radius: </label>';
+  html += '<input type="text" id="planet-radius-' + planetId + '" name="planet-radius-' + planetId + '" placeholder="0.0063674447" /> Gm';
+  html += '<br />';
+  html += '<label for="planet-speed-' + planetId + '">Speed: </label>';
+  html += '<input type="text" id="planet-speed-' + planetId + '" name="planet-speed-' + planetId + '" placeholder="5.449e-6" /> Gm';
+  html += '<br />';
+
+  var node = document.createElement("fieldset");
+  node.id = "planet-" + planetId;
+  node.innerHTML = html;
+  document.getElementById("planets").appendChild(node);
+}
+
 document.getElementById('form').onsubmit = function(e) {
   e.preventDefault();
 
@@ -200,18 +226,21 @@ document.getElementById('form').onsubmit = function(e) {
   var starRadius = extractNumber("star-radius", "the radius of the star");
   if (!starRadius) { return; }
 
-  var planetMass = extractNumber("planet-mass-1", "the mass of the planet");
-  if (!planetMass) { return; }
-  var planetRadius = extractNumber("planet-radius-1", "the radius of the planet");
-  if (!planetRadius) { return; }
-  var planetDistance = extractNumber("planet-distance-1", "the distance from the planet to the star");
-  if (!planetDistance) { return; }
-  var planetSpeed = extractNumber("planet-speed-1", "the initial speed of the planet");
-  if (!planetSpeed) { return; }
+  for (var i = planetId; i > 0; i--) {
+    var planetMass = extractNumber("planet-mass-" + i, "the mass of planet " + i);
+    if (!planetMass) { return; }
+    var planetRadius = extractNumber("planet-radius-" + i, "the radius of the planet " + i);
+    if (!planetRadius) { return; }
+    var planetDistance = extractNumber("planet-distance-" + i, "the distance from planet " + i + " to the star");
+    if (!planetDistance) { return; }
+    var planetSpeed = extractNumber("planet-speed-" + i, "the initial speed of planet" + i);
+    if (!planetSpeed) { return; }
+
+    planets.push(addSphere(planetRadius, planetDistance, 0, 0, "/planet.jpg",
+                           { mass: planetMass, vel: new THREE.Vector3(0, 0, planetSpeed) }));
+  }
 
   sun = addSphere(starRadius, 0, 0, 0, "/fur-wallpaper-8.jpg", { mass: starMass })
-  planets.push(addSphere(planetRadius, planetDistance, 0, 0, "/planet.jpg",
-                         { mass: planetMass, vel: new THREE.Vector3(0, 0, planetSpeed) }));
 
   document.getElementById("input").style.display = "none";
   document.getElementById("model").style.display = "block";
