@@ -167,6 +167,8 @@ var planets = [];
 var stats = createStats();
 document.getElementById("model").appendChild( stats.domElement );
 
+var FOCUS, focusVec = new THREE.Vector3();
+
 function animate() {
   stats.begin();
 
@@ -175,11 +177,17 @@ function animate() {
 
   if (sun && PAUSED === false) {
     sun.rotation.y += 0.05;
+    focusVec.copy(FOCUS.position);
 
     for (var i = 0; i < planets.length; i++) {
       orbit(planets[i], sun);
     }
+
+    focusVec.subVectors(FOCUS.position, focusVec);
+    camera.position.add(focusVec);
+    controls.target.copy(FOCUS.position);
   }
+
   window.requestAnimationFrame(animate);
   stats.end();
 }
@@ -225,7 +233,15 @@ function runSimulation() {
   document.getElementById("input").style.display = "none";
   document.getElementById("model").style.display = "block";
   PAUSED = false;
+  FOCUS = sun;
   window.requestAnimationFrame(animate);
+}
+
+function addPlanetToFocusOptions(planetId) {
+  var node = document.createElement("option");
+  node.value = planetId;
+  node.innerHTML = "Planet #" + (planetId + 1);
+  document.getElementById("focus").appendChild(node);
 }
 
 document.getElementById('form').onsubmit = function(e) {
@@ -254,6 +270,8 @@ document.getElementById('form').onsubmit = function(e) {
                            0,
                            "/planet.jpg",
                            { mass: planetMass, vel: new THREE.Vector3(0, 0, planetSpeed) }));
+
+    addPlanetToFocusOptions(i - 1);
   }
 
   sun = addSphere(starRadius, 0, 0, 0, "/bhushan.jpg", { mass: starMass })
@@ -273,6 +291,10 @@ function simulateHome() {
   planets.push(addSphere(3, 2870.99, 0, 0, "/planet.jpg",  { mass: 8.68103e25, vel: new THREE.Vector3(0, 0, 6.509e-6) }));
   planets.push(addSphere(3, 4504, 0, 0, "/planet.jpg",  { mass: 1.0241e26, vel: new THREE.Vector3(0, 0, 5.449e-6) }));
 
+  for (var i = 0; i < 8; i++) {
+    addPlanetToFocusOptions(i);
+  }
+
   runSimulation();
 }
 
@@ -280,6 +302,7 @@ function simulateJupiter() {
   sun = addSphere(3, 0, 0, 0, "/bhushan.jpg", { mass: 1.988435e30 });
   // Jupiter at Mars' distance.
   planets.push(addSphere(3, 227.94, 0, 0, "/planet.jpg",  { mass: 1.89813e27, vel: new THREE.Vector3(0, 0, 0.0000129824) }));
+  addPlanetToFocusOptions(0);
   camera.position.set(0, 700, 0);
   runSimulation();
 }
@@ -288,6 +311,7 @@ function simulateMercury() {
   sun = addSphere(3, 0, 0, 0, "/bhushan.jpg", { mass: 1.988435e30 });
   // Mercury at Mars' distance.
   planets.push(addSphere(3, 227.94, 0, 0, "/mercury.png", { mass: 3.30104e23, vel: new THREE.Vector3(0, 0, 4.74e-5) }));
+  addPlanetToFocusOptions(0);
   camera.position.set(0, 800, 0);
   STEPS_PER_FRAME = 5000;
   runSimulation();
@@ -297,6 +321,7 @@ function simulateSlowMercury() {
   sun = addSphere(3, 0, 0, 0, "/bhushan.jpg", { mass: 1.988435e30 });
   // Mercury at Mars' distance, 1/3 speed.
   planets.push(addSphere(3, 227.94, 0, 0, "/mercury.png", { mass: 3.30104e23, vel: new THREE.Vector3(0, 0, 4.74e-5 / 1.5) }));
+  addPlanetToFocusOptions(0);
   camera.position.set(0, 800, 0);
   STEPS_PER_FRAME = 5000;
   runSimulation();
@@ -306,6 +331,7 @@ function simulateSlowestMercury() {
   sun = addSphere(3, 0, 0, 0, "/bhushan.jpg", { mass: 1.988435e30 });
   // Mercury at Mars' distance, 1/3 speed.
   planets.push(addSphere(3, 227.94, 0, 0, "/mercury.png", { mass: 3.30104e23, vel: new THREE.Vector3(0, 0, 4.74e-5 / 2) }));
+  addPlanetToFocusOptions(0);
   camera.position.set(0, 800, 0);
   STEPS_PER_FRAME = 5000;
   runSimulation();
@@ -343,4 +369,22 @@ document.getElementById("resetButton").onclick = function() {
   scene.remove(sun);
   planets = [];
   sun = null;
+
+  document.getElementById("focus").innerHTML = "<option selected value='-1'>Sun</option>";
 };
+
+function focusCameraOn(focus) {
+  var focusVec = new THREE.Vector3();
+  focusVec.subVectors(focus.position, FOCUS.position);
+  camera.position.add(focusVec);
+  FOCUS = focus;
+  camera.lookAt(FOCUS.position);
+}
+
+document.getElementById("focus").onchange = function(e) {
+  if (+this.value === -1) {
+    focusCameraOn(sun);
+  } else {
+    focusCameraOn(planets[+this.value]);
+  }
+}
