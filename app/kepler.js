@@ -280,16 +280,16 @@ document.getElementById('form').onsubmit = function(e) {
 }
 
 function simulateHome() {
-  sun = addSphere(3, 0, 0, 0, "/bhushan.jpg", { mass: 1.988435e30 });
+  sun = addSphere(0.6955, 0, 0, 0, "/bhushan.jpg", { mass: 1.988435e30 });
 
-  planets.push(addSphere(3, 50.32, 0, 0, "/mercury.png", { mass: 3.30104e23, vel: new THREE.Vector3(0, 0, 4.74e-5) }));
-  planets.push(addSphere(3, 108.8, 0, 0, "/mercury.png", { mass: 4.86732e24, vel: new THREE.Vector3(0, 0, 3.5e-5) }));
-  planets.push(addSphere(3, 150, 0, 0, "/planet.jpg", { mass: 5.9721986e24, vel: new THREE.Vector3(0, 0, 2.963e-5) }));
-  planets.push(addSphere(3, 227.94, 0, 0, "/planet.jpg", { mass: 6.41693e23, vel: new THREE.Vector3(0, 0, 0.0000228175) }));
-  planets.push(addSphere(3, 778.33, 0, 0, "/planet.jpg",  { mass: 1.89813e27, vel: new THREE.Vector3(0, 0, 0.0000129824) }));
-  planets.push(addSphere(3, 1429.4, 0, 0, "/planet.jpg",  { mass: 5.68319e26, vel: new THREE.Vector3(0, 0, 9.280e-6) }));
-  planets.push(addSphere(3, 2870.99, 0, 0, "/planet.jpg",  { mass: 8.68103e25, vel: new THREE.Vector3(0, 0, 6.509e-6) }));
-  planets.push(addSphere(3, 4504, 0, 0, "/planet.jpg",  { mass: 1.0241e26, vel: new THREE.Vector3(0, 0, 5.449e-6) }));
+  planets.push(addSphere(0.0024397, 50.32, 0, 0, "/mercury.png", { mass: 3.30104e23, vel: new THREE.Vector3(0, 0, 4.74e-5) }));
+  planets.push(addSphere(0.0060519, 108.8, 0, 0, "/mercury.png", { mass: 4.86732e24, vel: new THREE.Vector3(0, 0, 3.5e-5) }));
+  planets.push(addSphere(0.0063674447, 150, 0, 0, "/planet.jpg", { mass: 5.9721986e24, vel: new THREE.Vector3(0, 0, 2.963e-5) }));
+  planets.push(addSphere(0.003386, 227.94, 0, 0, "/planet.jpg", { mass: 6.41693e23, vel: new THREE.Vector3(0, 0, 0.0000228175) }));
+  planets.push(addSphere(0.069173, 778.33, 0, 0, "/planet.jpg",  { mass: 1.89813e27, vel: new THREE.Vector3(0, 0, 0.0000129824) }));
+  planets.push(addSphere(0.057316, 1429.4, 0, 0, "/planet.jpg",  { mass: 5.68319e26, vel: new THREE.Vector3(0, 0, 9.280e-6) }));
+  planets.push(addSphere(0.025266, 2870.99, 0, 0, "/planet.jpg",  { mass: 8.68103e25, vel: new THREE.Vector3(0, 0, 6.509e-6) }));
+  planets.push(addSphere(0.024553, 4504, 0, 0, "/planet.jpg",  { mass: 1.0241e26, vel: new THREE.Vector3(0, 0, 5.449e-6) }));
 
   for (var i = 0; i < 8; i++) {
     addPlanetToFocusOptions(i);
@@ -299,18 +299,18 @@ function simulateHome() {
 }
 
 function simulateJupiter() {
-  sun = addSphere(3, 0, 0, 0, "/bhushan.jpg", { mass: 1.988435e30 });
+  sun = addSphere(0.6955, 0, 0, 0, "/bhushan.jpg", { mass: 1.988435e30 });
   // Jupiter at Mars' distance.
-  planets.push(addSphere(3, 227.94, 0, 0, "/planet.jpg",  { mass: 1.89813e27, vel: new THREE.Vector3(0, 0, 0.0000129824) }));
+  planets.push(addSphere(0.069173, 227.94, 0, 0, "/planet.jpg",  { mass: 1.89813e27, vel: new THREE.Vector3(0, 0, 0.0000129824) }));
   addPlanetToFocusOptions(0);
   camera.position.set(0, 700, 0);
   runSimulation();
 }
 
 function simulateMercury() {
-  sun = addSphere(3, 0, 0, 0, "/bhushan.jpg", { mass: 1.988435e30 });
+  sun = addSphere(0.6955, 0, 0, 0, "/bhushan.jpg", { mass: 1.988435e30 });
   // Mercury at Mars' distance.
-  planets.push(addSphere(3, 227.94, 0, 0, "/mercury.png", { mass: 3.30104e23, vel: new THREE.Vector3(0, 0, 4.74e-5) }));
+  planets.push(addSphere(0.0024397, 227.94, 0, 0, "/mercury.png", { mass: 3.30104e23, vel: new THREE.Vector3(0, 0, 4.74e-5) }));
   addPlanetToFocusOptions(0);
   camera.position.set(0, 800, 0);
   STEPS_PER_FRAME = 5000;
@@ -318,9 +318,9 @@ function simulateMercury() {
 }
 
 function simulateSlowMercury() {
-  sun = addSphere(3, 0, 0, 0, "/bhushan.jpg", { mass: 1.988435e30 });
+  sun = addSphere(0.6955, 0, 0, 0, "/bhushan.jpg", { mass: 1.988435e30 });
   // Mercury at Mars' distance, 1/3 speed.
-  planets.push(addSphere(3, 227.94, 0, 0, "/mercury.png", { mass: 3.30104e23, vel: new THREE.Vector3(0, 0, 4.74e-5 / 1.5) }));
+  planets.push(addSphere(0.0024397, 227.94, 0, 0, "/mercury.png", { mass: 3.30104e23, vel: new THREE.Vector3(0, 0, 4.74e-5 / 1.5) }));
   addPlanetToFocusOptions(0);
   camera.position.set(0, 800, 0);
   STEPS_PER_FRAME = 5000;
@@ -328,9 +328,9 @@ function simulateSlowMercury() {
 }
 
 function simulateSlowestMercury() {
-  sun = addSphere(3, 0, 0, 0, "/bhushan.jpg", { mass: 1.988435e30 });
+  sun = addSphere(0.6955, 0, 0, 0, "/bhushan.jpg", { mass: 1.988435e30 });
   // Mercury at Mars' distance, 1/3 speed.
-  planets.push(addSphere(3, 227.94, 0, 0, "/mercury.png", { mass: 3.30104e23, vel: new THREE.Vector3(0, 0, 4.74e-5 / 2) }));
+  planets.push(addSphere(0.0024397, 227.94, 0, 0, "/mercury.png", { mass: 3.30104e23, vel: new THREE.Vector3(0, 0, 4.74e-5 / 2) }));
   addPlanetToFocusOptions(0);
   camera.position.set(0, 800, 0);
   STEPS_PER_FRAME = 5000;
