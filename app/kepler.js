@@ -253,9 +253,23 @@ document.getElementById('form').onsubmit = function(e) {
 
   document.getElementById("input").style.display = "none";
   document.getElementById("model").style.display = "block";
+  PAUSED = false;
   window.requestAnimationFrame(animate);
 }
 
 function togglePause() {
   PAUSED = !PAUSED;
 }
+
+document.getElementById("resetButton").onclick = function() {
+  PAUSED = true;
+  document.getElementById("input").style.display = "block";
+  document.getElementById("model").style.display = "none";
+
+  for (var p in planets) {
+    scene.remove(planets[p].astro.ghost);
+    scene.remove(planets[p].astro.trail);
+    scene.remove(planets[p]);
+  }
+  scene.remove(sun);
+};
