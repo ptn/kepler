@@ -278,23 +278,36 @@ function simulateHome() {
 
 function simulateJupiter() {
   sun = addSphere(3, 0, 0, 0, "/bhushan.jpg", { mass: 1.988435e30 });
-
-  // Earth for reference.
-  planets.push(addSphere(3, 150, 0, 0, "/planet.jpg", { mass: 5.9721986e24, vel: new THREE.Vector3(0, 0, 2.963e-5) }));
   // Jupiter at Mars' distance.
   planets.push(addSphere(3, 227.94, 0, 0, "/planet.jpg",  { mass: 1.89813e27, vel: new THREE.Vector3(0, 0, 0.0000129824) }));
-
+  camera.position.set(0, 700, 0);
   runSimulation();
 }
 
 function simulateMercury() {
   sun = addSphere(3, 0, 0, 0, "/bhushan.jpg", { mass: 1.988435e30 });
-
-  // Earth for reference.
-  planets.push(addSphere(3, 150, 0, 0, "/planet.jpg", { mass: 5.9721986e24, vel: new THREE.Vector3(0, 0, 2.963e-5) }));
   // Mercury at Mars' distance.
   planets.push(addSphere(3, 227.94, 0, 0, "/mercury.png", { mass: 3.30104e23, vel: new THREE.Vector3(0, 0, 4.74e-5) }));
+  camera.position.set(0, 800, 0);
+  STEPS_PER_FRAME = 5000;
+  runSimulation();
+}
 
+function simulateSlowMercury() {
+  sun = addSphere(3, 0, 0, 0, "/bhushan.jpg", { mass: 1.988435e30 });
+  // Mercury at Mars' distance, 1/3 speed.
+  planets.push(addSphere(3, 227.94, 0, 0, "/mercury.png", { mass: 3.30104e23, vel: new THREE.Vector3(0, 0, 4.74e-5 / 1.5) }));
+  camera.position.set(0, 800, 0);
+  STEPS_PER_FRAME = 5000;
+  runSimulation();
+}
+
+function simulateSlowestMercury() {
+  sun = addSphere(3, 0, 0, 0, "/bhushan.jpg", { mass: 1.988435e30 });
+  // Mercury at Mars' distance, 1/3 speed.
+  planets.push(addSphere(3, 227.94, 0, 0, "/mercury.png", { mass: 3.30104e23, vel: new THREE.Vector3(0, 0, 4.74e-5 / 2) }));
+  camera.position.set(0, 800, 0);
+  STEPS_PER_FRAME = 5000;
   runSimulation();
 }
 
@@ -305,6 +318,10 @@ document.getElementById('preload').onchange = function(e) {
     simulateJupiter();
   } else if (this.value === 'mercury') {
     simulateMercury();
+  } else if (this.value === 'slow-mercury') {
+    simulateSlowMercury();
+  } else if (this.value === 'slowest-mercury') {
+    simulateSlowestMercury();
   }
 };
 
