@@ -5,7 +5,7 @@ and surrounding planets, renders a 3D simulation of the orbits of the planets
 around the star. The physics model is comprised solely by Newton's 
 gravitational field equation, which we solve to plot said orbits.
 
-This is how a simulation looks like: http://imgur.com/I7nUy30
+This is how a simulation looks like: ![Simulation](http://i.imgur.com/I7nUy30.png "Simulation")
 
 You can visit a live demo here: http://ptn.github.io/kepler/
 
