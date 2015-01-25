@@ -193,11 +193,11 @@ function animate() {
 }
 
 function extractNumber(formElementId, errorMsg) {
-  var value = +document.forms["form"][formElementId].value;
+  var value = document.forms["form"][formElementId].value;
   if (!value) {
     alert("Insert a valid number for " + errorMsg);
   }
-  return value;
+  return +value;
 }
 
 var planetId = 1;
