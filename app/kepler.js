@@ -7,9 +7,6 @@ function getDistance(v1, v2) {
   return Math.sqrt(x * x + y * y + z * z);
 }
 
-var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
-var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 0.1, FAR = 200000;
-
 // Astronomy.
 var G = 6.67384e-11; // m3 kg-1 s-2
 var GHOST_DISTANCE_SCALE = 80;
@@ -56,9 +53,9 @@ function createSphere(r, x, y, z, textureUrl, astro) {
 
 function addSphere(r, x, y, z, textureUrl, astro) {
   var sphere = createSphere(r, x, y, z, textureUrl, astro);
-  animation.scene.add(sphere);
-  animation.scene.add(sphere.astro.ghost);
-  animation.scene.add(sphere.astro.trail);
+  graphics.scene.add(sphere);
+  graphics.scene.add(sphere.astro.ghost);
+  graphics.scene.add(sphere.astro.trail);
   return sphere;
 }
 
@@ -182,7 +179,7 @@ function simulateJupiter() {
   // Jupiter at Mars' distance.
   animation.planets.push(addSphere(0.069173, 227.94, 0, 0, "planet.jpg",  { mass: 1.89813e27, vel: new THREE.Vector3(0, 0, 0.0000129824) }));
   addPlanetToFocusOptions(0);
-  animation.camera.position.set(0, 700, 0);
+  graphics.camera.position.set(0, 700, 0);
   animation.run('input', 'model');
 }
 
@@ -191,7 +188,7 @@ function simulateMercury() {
   // Mercury at Mars' distance.
   animation.planets.push(addSphere(0.0024397, 227.94, 0, 0, "mercury.png", { mass: 3.30104e23, vel: new THREE.Vector3(0, 0, 4.74e-5) }));
   addPlanetToFocusOptions(0);
-  animation.camera.position.set(0, 800, 0);
+  graphics.camera.position.set(0, 800, 0);
   STEPS_PER_FRAME = 5000;
   animation.run('input', 'model');
 }
@@ -201,7 +198,7 @@ function simulateSlowMercury() {
   // Mercury at Mars' distance, 1/3 speed.
   animation.planets.push(addSphere(0.0024397, 227.94, 0, 0, "mercury.png", { mass: 3.30104e23, vel: new THREE.Vector3(0, 0, 4.74e-5 / 1.5) }));
   addPlanetToFocusOptions(0);
-  animation.camera.position.set(0, 800, 0);
+  graphics.camera.position.set(0, 800, 0);
   STEPS_PER_FRAME = 5000;
   animation.run('input', 'model');
 }
@@ -211,7 +208,7 @@ function simulateSlowestMercury() {
   // Mercury at Mars' distance, 1/3 speed.
   animation.planets.push(addSphere(0.0024397, 227.94, 0, 0, "mercury.png", { mass: 3.30104e23, vel: new THREE.Vector3(0, 0, 4.74e-5 / 2) }));
   addPlanetToFocusOptions(0);
-  animation.camera.position.set(0, 800, 0);
+  graphics.camera.position.set(0, 800, 0);
   STEPS_PER_FRAME = 5000;
   animation.run('input', 'model');
 }
@@ -241,12 +238,12 @@ document.getElementById("resetButton").onclick = function() {
   document.getElementById("model").style.display = "none";
 
   for (var p in animation.planets) {
-    animation.scene.remove(animation.planets[p].astro.ghost);
-    animation.scene.remove(animation.planets[p].astro.trail);
-    animation.scene.remove(animation.planets[p]);
+    graphics.scene.remove(animation.planets[p].astro.ghost);
+    graphics.scene.remove(animation.planets[p].astro.trail);
+    graphics.scene.remove(animation.planets[p]);
   }
-  animation.scene.remove(animation.sun.astro.ghost);
-  animation.scene.remove(animation.sun);
+  graphics.scene.remove(animation.sun.astro.ghost);
+  graphics.scene.remove(animation.sun);
 
   animation.planets = [];
   animation.sun = null;

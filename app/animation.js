@@ -14,11 +14,61 @@ var SEC_PER_STEP = 8;
 var MIN_GHOST_DISTANCE = 100;
 
 ;(function(exports) {
-  function createCamera() {
-    camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
-    camera.position.set(0, 500, 0);
-    return camera;
+  var graphics = exports.graphics = {
+    view_angle: 45,
+    aspect: window.innerWidth / window.innerHeight,
+    near: 0.1,
+    far: 200000,
+
+    _createCamera: function() {
+      var camera = new THREE.PerspectiveCamera(this.view_angle,
+                                               this.aspect,
+                                               this.near,
+                                               this.far);
+      camera.position.set(0, 500, 0);
+      return camera;
+    },
+
+    _createRenderer: function() {
+      var renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+
+      var container = document.getElementById("canvas");
+      container.appendChild(renderer.domElement);
+
+      return renderer;
+    },
+
+    init: function() {
+      this.focus = new THREE.Vector3();
+      this.scene = new THREE.Scene();
+      this.camera = this._createCamera();
+      this.renderer = this._createRenderer();
+      this.ambientLight = new THREE.AmbientLight(0xCCCCCC);
+
+      this.camera.lookAt(this.scene.position);
+      this.scene.add(this.camera);
+      this.scene.add(this.ambientLight);
+    },
+
+    focusCameraOn: function(newFocus) {
+      // subtraction vector of the new focus minus the current one
+      var focusVector = new THREE.Vector3();
+
+      focusVector.subVectors(newFocus.position,
+                             this.focus.position);
+
+      this.camera.position.add(focusVector);
+      this.camera.lookAt(newFocus.position);
+
+      this.focus = newFocus;
+    },
+
+    render: function() {
+      this.renderer.render(this.scene, this.camera);
+    }
   };
+
 
   function createStats() {
     var stats = (new Stats());
@@ -27,25 +77,6 @@ var MIN_GHOST_DISTANCE = 100;
     return stats;
   };
 
-  function createRenderer() {
-    renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
-    var container = document.getElementById("canvas");
-    container.appendChild(renderer.domElement);
-    return renderer;
-  };
-
-  function focusCameraOn(newFocus) {
-    // subtraction vector of the new focus minus the current one
-    var focusVector = new THREE.Vector3();
-    focusVector.subVectors(newFocus.position,
-                           animation.focus.position);
-
-    animation.camera.position.add(focusVector);
-    animation.camera.lookAt(newFocus.position);
-
-    animation.focus = newFocus;
-  };
 
   function leaveTrail(sphere) {
     sphere.astro.trail.geometry.vertices.unshift(new THREE.Vector3().copy(sphere.position));
@@ -74,7 +105,7 @@ var MIN_GHOST_DISTANCE = 100;
   function updateGhost(planet) {
     planet.astro.ghost.position.copy(planet.position);
 
-    var distance = getDistance(animation.camera.position, planet.position);
+    var distance = getDistance(graphics.camera.position, planet.position);
     if (distance < MIN_GHOST_DISTANCE) {
       planet.astro.ghost.material.opacity = 0;
     } else {
@@ -92,19 +123,12 @@ var MIN_GHOST_DISTANCE = 100;
   var animation = exports.animation = {
     init: function() {
       this.paused = false;
-      this.focus = new THREE.Vector3();
-      this.scene = new THREE.Scene();
-      this.ambientLight = new THREE.AmbientLight(0xCCCCCC);
-      this.camera = createCamera();
-      this.renderer = createRenderer();
 
-      this.camera.lookAt(this.scene.position);
-      this.scene.add(this.camera);
-      this.scene.add(this.ambientLight);
+      graphics.init();
 
       this.stats = createStats();
 
-      this.sun;
+      this.sun = null;
       this.planets = [];
     },
 
@@ -119,8 +143,8 @@ var MIN_GHOST_DISTANCE = 100;
     },
 
     addControls: function(sliderElementId) {
-      this.controls = new THREE.OrbitControls(this.camera,
-                                              this.renderer.domElement);
+      this.controls = new THREE.OrbitControls(graphics.camera,
+                                              graphics.renderer.domElement);
 
       var slider = document.getElementById(sliderElementId);
       slider.onchange = function(e) {
@@ -129,10 +153,10 @@ var MIN_GHOST_DISTANCE = 100;
     },
 
     focusCameraOnSun: function() {
-      focusCameraOn(this.sun);
+      graphics.focusCameraOn(this.sun);
     },
     focusCameraOnPlanet: function(planetId) {
-      focusCameraOn(this.planets[planetId]);
+      graphics.focusCameraOn(this.planets[planetId]);
     },
 
     togglePause: function() {
@@ -142,20 +166,20 @@ var MIN_GHOST_DISTANCE = 100;
     animate: function () {
       animation.stats.begin();
 
-      animation.renderer.render(animation.scene, animation.camera);
+      graphics.render();
 
       if (animation.sun && animation.paused === false) {
         animation.sun.rotation.y += 0.05;
-        animation.animationFocusVector.copy(animation.focus.position);
+        animation.animationFocusVector.copy(graphics.focus.position);
 
         for (var i = 0; i < animation.planets.length; i++) {
           orbit(animation.planets[i], animation.sun);
         }
 
-        animation.animationFocusVector.subVectors(animation.focus.position,
+        animation.animationFocusVector.subVectors(graphics.focus.position,
                                                   animation.animationFocusVector);
-        animation.camera.position.add(animation.animationFocusVector);
-        animation.controls.target.copy(animation.focus.position);
+        graphics.camera.position.add(animation.animationFocusVector);
+        animation.controls.target.copy(graphics.focus.position);
       }
 
       window.requestAnimationFrame(animation.animate);
@@ -168,7 +192,7 @@ var MIN_GHOST_DISTANCE = 100;
       document.getElementById(showId).style.display = "block";
 
       this.paused = false;
-      this.focus = this.sun;
+      graphics.focus = this.sun;
 
       // Helper vector that animate requires. Create it only once here and
       // change it from animate as needed.
