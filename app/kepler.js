@@ -1,24 +1,3 @@
-// 1 unit here is 1 billion meters in Real Life.
-
-function getDistance(v1, v2) {
-  var x = v1.x - v2.x;
-  var y = v1.y - v2.y;
-  var z = v1.z - v2.z;
-  return Math.sqrt(x * x + y * y + z * z);
-}
-
-// Astronomy.
-var G = 6.67384e-11; // m3 kg-1 s-2
-var GHOST_DISTANCE_SCALE = 80;
-var MAX_GHOST_OPACITY = 0.15;
-
-// move later
-var MAX_TRAIL_VERTICES = 400;
-
-function getAcceleration(distance, starMass) {
-  return G * starMass / (Math.pow(distance, 2));
-}
-
 animation.init();
 // Align top-left
 animation.addStatsToDOM({
@@ -135,7 +114,7 @@ function simulateJupiter() {
   // Jupiter at Mars' distance.
   animation.addPlanet(0.069173, 227.94, 0, 0, "planet.jpg",  { mass: 1.89813e27, vel: new THREE.Vector3(0, 0, 0.0000129824) });
   addPlanetToFocusOptions(0);
-  graphics.camera.position.set(0, 700, 0);
+
   animation.run('input', 'model');
 }
 
@@ -144,8 +123,7 @@ function simulateMercury() {
   // Mercury at Mars' distance.
   animation.addPlanet(0.0024397, 227.94, 0, 0, "mercury.png", { mass: 3.30104e23, vel: new THREE.Vector3(0, 0, 4.74e-5) });
   addPlanetToFocusOptions(0);
-  graphics.camera.position.set(0, 800, 0);
-  STEPS_PER_FRAME = 5000;
+
   animation.run('input', 'model');
 }
 
@@ -154,8 +132,7 @@ function simulateSlowMercury() {
   // Mercury at Mars' distance, 1/3 speed.
   animation.addPlanet(0.0024397, 227.94, 0, 0, "mercury.png", { mass: 3.30104e23, vel: new THREE.Vector3(0, 0, 4.74e-5 / 1.5) });
   addPlanetToFocusOptions(0);
-  graphics.camera.position.set(0, 800, 0);
-  STEPS_PER_FRAME = 5000;
+
   animation.run('input', 'model');
 }
 
@@ -164,8 +141,7 @@ function simulateSlowestMercury() {
   // Mercury at Mars' distance, 1/3 speed.
   animation.addPlanet(0.0024397, 227.94, 0, 0, "mercury.png", { mass: 3.30104e23, vel: new THREE.Vector3(0, 0, 4.74e-5 / 2) });
   addPlanetToFocusOptions(0);
-  graphics.camera.position.set(0, 800, 0);
-  STEPS_PER_FRAME = 5000;
+
   animation.run('input', 'model');
 }
 
@@ -188,29 +164,17 @@ function togglePause() {
 }
 
 document.getElementById("resetButton").onclick = function() {
-  animation.paused = true;
+  animation.destroy();
 
   document.getElementById("input").style.display = "block";
   document.getElementById("model").style.display = "none";
-
-  for (var p in animation.planets) {
-    graphics.scene.remove(animation.planets[p].astro.ghost);
-    graphics.scene.remove(animation.planets[p].astro.trail);
-    graphics.scene.remove(animation.planets[p]);
-  }
-  graphics.scene.remove(animation.sun.astro.ghost);
-  graphics.scene.remove(animation.sun);
-
-  animation.planets = [];
-  animation.sun = null;
-
   document.getElementById("focus").innerHTML = "<option selected value='-1'>Sun</option>";
 };
 
 document.getElementById("focus").onchange = function(e) {
   if (+this.value === -1) {
-    animation.focusCameraOnSun();
+    animation.focusOnSun();
   } else {
-    animation.focusCameraOnPlanet(+this.value);
+    animation.focusOnPlanet(+this.value);
   }
 }

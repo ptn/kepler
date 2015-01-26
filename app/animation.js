@@ -1,20 +1,17 @@
-// console.log(this.stats);
-  // animation.togglePause();
-// use preloadedAnimations.home()/jupiter()/etc.
+// 1 unit here is 1 billion meters in Real Life.
 
-  // Use animation.destroy
-  // extract a removeBody function
-//
-// addStart
-// addPlanet
-
-var STEPS_PER_FRAME = 10000;
+// gravitational constant
+var G = 6.67384e-11; // m3 kg-1 s-2
+var STEPS_PER_FRAME = 5000;
 var METERS_PER_UNIT = 1000000000;
 var SEC_PER_STEP = 8;
 var MIN_GHOST_DISTANCE = 100;
+var MAX_TRAIL_VERTICES = 400;
+var MAX_GHOST_OPACITY = 0.15;
+var GHOST_DISTANCE_SCALE = 80;
 
 ;(function(exports) {
-  var graphics = exports.graphics = {
+  var graphics = {
     view_angle: 45,
     aspect: window.innerWidth / window.innerHeight,
     near: 0.1,
@@ -25,7 +22,7 @@ var MIN_GHOST_DISTANCE = 100;
                                                this.aspect,
                                                this.near,
                                                this.far);
-      camera.position.set(0, 500, 0);
+      camera.position.set(0, 700, 0);
       return camera;
     },
 
@@ -97,6 +94,10 @@ var MIN_GHOST_DISTANCE = 100;
       return sphere;
     },
 
+    removeSphere: function(sphere) {
+      graphics.scene.remove(sphere);
+    },
+
     focusCameraOn: function(newFocus) {
       // subtraction vector of the new focus minus the current one
       var focusVector = new THREE.Vector3();
@@ -130,7 +131,6 @@ var MIN_GHOST_DISTANCE = 100;
     },
   };
 
-
   function createStats() {
     var stats = (new Stats());
     // 0: fps, 1: ms
@@ -138,6 +138,16 @@ var MIN_GHOST_DISTANCE = 100;
     return stats;
   };
 
+  function getDistance(v1, v2) {
+    var x = v1.x - v2.x;
+    var y = v1.y - v2.y;
+    var z = v1.z - v2.z;
+    return Math.sqrt(x * x + y * y + z * z);
+  };
+
+  function getAcceleration(distance, starMass) {
+    return G * starMass / (Math.pow(distance, 2));
+  };
 
   function leaveTrail(sphere) {
     sphere.astro.trail.geometry.vertices.unshift(new THREE.Vector3().copy(sphere.position));
@@ -222,10 +232,10 @@ var MIN_GHOST_DISTANCE = 100;
       };
     },
 
-    focusCameraOnSun: function() {
+    focusOnSun: function() {
       graphics.focusCameraOn(this.sun);
     },
-    focusCameraOnPlanet: function(planetId) {
+    focusOnPlanet: function(planetId) {
       graphics.focusCameraOn(this.planets[planetId]);
     },
 
@@ -261,6 +271,21 @@ var MIN_GHOST_DISTANCE = 100;
       graphics.focus = this.sun;
 
       window.requestAnimationFrame(this.animate);
+    },
+
+    destroy: function() {
+      this.paused = true;
+
+      for (var p in this.planets) {
+        graphics.removeSphere(this.planets[p].astro.ghost);
+        graphics.removeSphere(this.planets[p].astro.trail);
+        graphics.removeSphere(this.planets[p]);
+      }
+      graphics.removeSphere(this.sun.astro.ghost);
+      graphics.removeSphere(this.sun);
+
+      this.planets = [];
+      this.sun = null;
     }
   };
 })(this);
