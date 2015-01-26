@@ -93,14 +93,14 @@ document.getElementById('new-planet').onclick = function(e) {
   planetId += 1;
 
   var html = '<legend>Planet #' + planetId + '</legend>';
+  html += '<label for="planet-radius-' + planetId + '">Radius: </label>';
+  html += '<input type="text" id="planet-radius-' + planetId + '" name="planet-radius-' + planetId + '" placeholder="0.0063674447" /> Gm';
+  html += '<br />';
   html += '<label for="planet-mass-' + planetId + '">Mass: </label>';
   html += '<input type="text" id="planet-mass-' + planetId + '" name="planet-mass-' + planetId + '" placeholder="5.9721986e24" /> kg';
   html += '<br />';
   html += '<label for="planet-distance-' + planetId + '">Distance: </label>';
   html += '<input type="text" id="planet-distance-' + planetId + '" name="planet-distance-' + planetId + '" placeholder="150" /> Gm';
-  html += '<br />';
-  html += '<label for="planet-radius-' + planetId + '">Radius: </label>';
-  html += '<input type="text" id="planet-radius-' + planetId + '" name="planet-radius-' + planetId + '" placeholder="0.0063674447" /> Gm';
   html += '<br />';
   html += '<label for="planet-speed-' + planetId + '">Speed: </label>';
   html += '<input type="text" id="planet-speed-' + planetId + '" name="planet-speed-' + planetId + '" placeholder="5.449e-6" /> Gm';
