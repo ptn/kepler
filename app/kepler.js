@@ -15,50 +15,6 @@ var MAX_GHOST_OPACITY = 0.15;
 // move later
 var MAX_TRAIL_VERTICES = 400;
 
-function createTrail(x, y, z) {
-  var trailGeometry = new THREE.Geometry();
-  for (i = 0; i < MAX_TRAIL_VERTICES; i++) {
-    trailGeometry.vertices.push(new THREE.Vector3(x, y, z));
-  }
-  var trailMaterial = new THREE.LineBasicMaterial();
-  return new THREE.Line(trailGeometry, trailMaterial);
-}
-
-function createSphere(r, x, y, z, textureUrl, astro) {
-  if (astro === undefined) {
-    astro = {};
-  }
-  if (astro.vel === undefined) {
-    astro.vel = new THREE.Vector3();
-  }
-  if (astro.trail === undefined) {
-    astro.trail = createTrail(x, y, z);
-  }
-
-  var geometry = new THREE.SphereGeometry(r, 32, 16);
-  var texture = THREE.ImageUtils.loadTexture(textureUrl);
-  var material = new THREE.MeshBasicMaterial({ map: texture });
-  var sphere = new THREE.Mesh(geometry, material);
-  sphere.position.set(x, y, z);
-  sphere.astro = astro;
-
-  var ghostGeometry = new THREE.SphereGeometry(1, 32, 16);
-  var ghostTexture = THREE.ImageUtils.loadTexture(textureUrl);
-  var ghostMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0});
-  var ghostSphere = new THREE.Mesh(ghostGeometry, ghostMaterial);
-  ghostSphere.position.set(x, y, z);
-  sphere.astro.ghost = ghostSphere;
-  return sphere;
-}
-
-function addSphere(r, x, y, z, textureUrl, astro) {
-  var sphere = createSphere(r, x, y, z, textureUrl, astro);
-  graphics.scene.add(sphere);
-  graphics.scene.add(sphere.astro.ghost);
-  graphics.scene.add(sphere.astro.trail);
-  return sphere;
-}
-
 function getAcceleration(distance, starMass) {
   return G * starMass / (Math.pow(distance, 2));
 }
@@ -140,32 +96,32 @@ document.getElementById('form').onsubmit = function(e) {
     var planetIncl = extractNumber("planet-incl-" + i, "the initial inclination of planet" + i);
     if (Number.isNaN(planetIncl)) { return; }
 
-    animation.planets.push(addSphere(planetRadius,
-                                     Math.cos(planetIncl / 180 * Math.PI) * planetDistance,
-                                     Math.sin(planetIncl / 180 * Math.PI) * planetDistance,
-                                     0,
-                                     "planet.jpg",
-                                     { mass: planetMass, vel: new THREE.Vector3(0, 0, planetSpeed) }));
+    animation.addPlanet(planetRadius,
+                        Math.cos(planetIncl / 180 * Math.PI) * planetDistance,
+                        Math.sin(planetIncl / 180 * Math.PI) * planetDistance,
+                        0,
+                        "planet.jpg",
+                        { mass: planetMass, vel: new THREE.Vector3(0, 0, planetSpeed) });
 
     addPlanetToFocusOptions(i - 1);
   }
 
-  animation.sun = addSphere(starRadius, 0, 0, 0, "bhushan.jpg", { mass: starMass })
+  animation.addSun(starRadius, 0, 0, 0, "bhushan.jpg", { mass: starMass });
 
   animation.run('input', 'model');
 }
 
 function simulateHome() {
-  animation.sun = addSphere(0.6955, 0, 0, 0, "bhushan.jpg", { mass: 1.988435e30 });
+  animation.addSun(0.6955, 0, 0, 0, "bhushan.jpg", { mass: 1.988435e30 });
 
-  animation.planets.push(addSphere(0.0024397, 50.32, 0, 0, "mercury.png", { mass: 3.30104e23, vel: new THREE.Vector3(0, 0, 4.74e-5) }));
-  animation.planets.push(addSphere(0.0060519, 108.8, 0, 0, "mercury.png", { mass: 4.86732e24, vel: new THREE.Vector3(0, 0, 3.5e-5) }));
-  animation.planets.push(addSphere(0.0063674447, 150, 0, 0, "planet.jpg", { mass: 5.9721986e24, vel: new THREE.Vector3(0, 0, 2.963e-5) }));
-  animation.planets.push(addSphere(0.003386, 227.94, 0, 0, "planet.jpg", { mass: 6.41693e23, vel: new THREE.Vector3(0, 0, 0.0000228175) }));
-  animation.planets.push(addSphere(0.069173, 778.33, 0, 0, "planet.jpg",  { mass: 1.89813e27, vel: new THREE.Vector3(0, 0, 0.0000129824) }));
-  animation.planets.push(addSphere(0.057316, 1429.4, 0, 0, "planet.jpg",  { mass: 5.68319e26, vel: new THREE.Vector3(0, 0, 9.280e-6) }));
-  animation.planets.push(addSphere(0.025266, 2870.99, 0, 0, "planet.jpg",  { mass: 8.68103e25, vel: new THREE.Vector3(0, 0, 6.509e-6) }));
-  animation.planets.push(addSphere(0.024553, 4504, 0, 0, "planet.jpg",  { mass: 1.0241e26, vel: new THREE.Vector3(0, 0, 5.449e-6) }));
+  animation.addPlanet(0.0024397, 50.32, 0, 0, "mercury.png", { mass: 3.30104e23, vel: new THREE.Vector3(0, 0, 4.74e-5) });
+  animation.addPlanet(0.0060519, 108.8, 0, 0, "mercury.png", { mass: 4.86732e24, vel: new THREE.Vector3(0, 0, 3.5e-5) });
+  animation.addPlanet(0.0063674447, 150, 0, 0, "planet.jpg", { mass: 5.9721986e24, vel: new THREE.Vector3(0, 0, 2.963e-5) });
+  animation.addPlanet(0.003386, 227.94, 0, 0, "planet.jpg", { mass: 6.41693e23, vel: new THREE.Vector3(0, 0, 0.0000228175) });
+  animation.addPlanet(0.069173, 778.33, 0, 0, "planet.jpg",  { mass: 1.89813e27, vel: new THREE.Vector3(0, 0, 0.0000129824) });
+  animation.addPlanet(0.057316, 1429.4, 0, 0, "planet.jpg",  { mass: 5.68319e26, vel: new THREE.Vector3(0, 0, 9.280e-6) });
+  animation.addPlanet(0.025266, 2870.99, 0, 0, "planet.jpg",  { mass: 8.68103e25, vel: new THREE.Vector3(0, 0, 6.509e-6) });
+  animation.addPlanet(0.024553, 4504, 0, 0, "planet.jpg",  { mass: 1.0241e26, vel: new THREE.Vector3(0, 0, 5.449e-6) });
 
   for (var i = 0; i < 8; i++) {
     addPlanetToFocusOptions(i);
@@ -175,18 +131,18 @@ function simulateHome() {
 }
 
 function simulateJupiter() {
-  animation.sun = addSphere(0.6955, 0, 0, 0, "bhushan.jpg", { mass: 1.988435e30 });
+  animation.addSun(0.6955, 0, 0, 0, "bhushan.jpg", { mass: 1.988435e30 });
   // Jupiter at Mars' distance.
-  animation.planets.push(addSphere(0.069173, 227.94, 0, 0, "planet.jpg",  { mass: 1.89813e27, vel: new THREE.Vector3(0, 0, 0.0000129824) }));
+  animation.addPlanet(0.069173, 227.94, 0, 0, "planet.jpg",  { mass: 1.89813e27, vel: new THREE.Vector3(0, 0, 0.0000129824) });
   addPlanetToFocusOptions(0);
   graphics.camera.position.set(0, 700, 0);
   animation.run('input', 'model');
 }
 
 function simulateMercury() {
-  animation.sun = addSphere(0.6955, 0, 0, 0, "bhushan.jpg", { mass: 1.988435e30 });
+  animation.addSun(0.6955, 0, 0, 0, "bhushan.jpg", { mass: 1.988435e30 });
   // Mercury at Mars' distance.
-  animation.planets.push(addSphere(0.0024397, 227.94, 0, 0, "mercury.png", { mass: 3.30104e23, vel: new THREE.Vector3(0, 0, 4.74e-5) }));
+  animation.addPlanet(0.0024397, 227.94, 0, 0, "mercury.png", { mass: 3.30104e23, vel: new THREE.Vector3(0, 0, 4.74e-5) });
   addPlanetToFocusOptions(0);
   graphics.camera.position.set(0, 800, 0);
   STEPS_PER_FRAME = 5000;
@@ -194,9 +150,9 @@ function simulateMercury() {
 }
 
 function simulateSlowMercury() {
-  animation.sun = addSphere(0.6955, 0, 0, 0, "bhushan.jpg", { mass: 1.988435e30 });
+  animation.addSun(0.6955, 0, 0, 0, "bhushan.jpg", { mass: 1.988435e30 });
   // Mercury at Mars' distance, 1/3 speed.
-  animation.planets.push(addSphere(0.0024397, 227.94, 0, 0, "mercury.png", { mass: 3.30104e23, vel: new THREE.Vector3(0, 0, 4.74e-5 / 1.5) }));
+  animation.addPlanet(0.0024397, 227.94, 0, 0, "mercury.png", { mass: 3.30104e23, vel: new THREE.Vector3(0, 0, 4.74e-5 / 1.5) });
   addPlanetToFocusOptions(0);
   graphics.camera.position.set(0, 800, 0);
   STEPS_PER_FRAME = 5000;
@@ -204,9 +160,9 @@ function simulateSlowMercury() {
 }
 
 function simulateSlowestMercury() {
-  animation.sun = addSphere(0.6955, 0, 0, 0, "bhushan.jpg", { mass: 1.988435e30 });
+  animation.addSun(0.6955, 0, 0, 0, "bhushan.jpg", { mass: 1.988435e30 });
   // Mercury at Mars' distance, 1/3 speed.
-  animation.planets.push(addSphere(0.0024397, 227.94, 0, 0, "mercury.png", { mass: 3.30104e23, vel: new THREE.Vector3(0, 0, 4.74e-5 / 2) }));
+  animation.addPlanet(0.0024397, 227.94, 0, 0, "mercury.png", { mass: 3.30104e23, vel: new THREE.Vector3(0, 0, 4.74e-5 / 2) });
   addPlanetToFocusOptions(0);
   graphics.camera.position.set(0, 800, 0);
   STEPS_PER_FRAME = 5000;

@@ -51,6 +51,52 @@ var MIN_GHOST_DISTANCE = 100;
       this.scene.add(this.ambientLight);
     },
 
+    _createTrail: function(x, y, z) {
+      var trailGeometry = new THREE.Geometry();
+      for (i = 0; i < MAX_TRAIL_VERTICES; i++) {
+        trailGeometry.vertices.push(new THREE.Vector3(x, y, z));
+      }
+      var trailMaterial = new THREE.LineBasicMaterial();
+      return new THREE.Line(trailGeometry, trailMaterial);
+    },
+
+    _createSphere: function(r, x, y, z, textureUrl, astro) {
+      if (astro === undefined) {
+        astro = {};
+      }
+      if (astro.vel === undefined) {
+        astro.vel = new THREE.Vector3();
+      }
+      if (astro.trail === undefined) {
+        astro.trail = this._createTrail(x, y, z);
+      }
+
+      var geometry = new THREE.SphereGeometry(r, 32, 16);
+      var texture = THREE.ImageUtils.loadTexture(textureUrl);
+      var material = new THREE.MeshBasicMaterial({ map: texture });
+      var sphere = new THREE.Mesh(geometry, material);
+      sphere.position.set(x, y, z);
+      sphere.astro = astro;
+
+      var ghostGeometry = new THREE.SphereGeometry(1, 32, 16);
+      var ghostTexture = THREE.ImageUtils.loadTexture(textureUrl);
+      var ghostMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0});
+      var ghostSphere = new THREE.Mesh(ghostGeometry, ghostMaterial);
+      ghostSphere.position.set(x, y, z);
+      sphere.astro.ghost = ghostSphere;
+      return sphere;
+    },
+
+    addNewSphere: function(r, x, y, z, textureUrl, astro) {
+      var sphere = this._createSphere(r, x, y, z, textureUrl, astro);
+
+      this.scene.add(sphere);
+      this.scene.add(sphere.astro.ghost);
+      this.scene.add(sphere.astro.trail);
+
+      return sphere;
+    },
+
     focusCameraOn: function(newFocus) {
       // subtraction vector of the new focus minus the current one
       var focusVector = new THREE.Vector3();
@@ -145,6 +191,15 @@ var MIN_GHOST_DISTANCE = 100;
 
       this.sun = null;
       this.planets = [];
+    },
+
+    addSun: function(r, x, y, z, textureUrl, astro) {
+      this.sun = graphics.addNewSphere(r, x, y, z, textureUrl, astro);
+    },
+
+    addPlanet: function(r, x, y, z, textureUrl, astro) {
+      var planet = graphics.addNewSphere(r, x, y, z, textureUrl, astro);
+      this.planets.push(planet);
     },
 
     addStatsToDOM: function(opts) {
