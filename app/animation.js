@@ -66,7 +66,22 @@ var MIN_GHOST_DISTANCE = 100;
 
     render: function() {
       this.renderer.render(this.scene, this.camera);
-    }
+    },
+
+    prepareFollowFocus: function() {
+      if (typeof this.followFocusVector === 'undefined') {
+        // Helper vector required to follow the focus. Create it only once and
+        // mutate it as needed.
+        this.followFocusVector = new THREE.Vector3();
+      }
+      this.followFocusVector.copy(this.focus.position);
+    },
+
+    followFocus: function() {
+      this.followFocusVector.subVectors(this.focus.position,
+                                        this.followFocusVector);
+      this.camera.position.add(this.followFocusVector);
+    },
   };
 
 
@@ -170,15 +185,11 @@ var MIN_GHOST_DISTANCE = 100;
 
       if (animation.sun && !animation.paused) {
         animation.sun.rotation.y += 0.05;
-        animation.animationFocusVector.copy(graphics.focus.position);
-
+        graphics.prepareFollowFocus();
         for (var i = 0; i < animation.planets.length; i++) {
           orbit(animation.planets[i], animation.sun);
         }
-
-        animation.animationFocusVector.subVectors(graphics.focus.position,
-                                                  animation.animationFocusVector);
-        graphics.camera.position.add(animation.animationFocusVector);
+        graphics.followFocus();
         animation.controls.target.copy(graphics.focus.position);
       }
 
@@ -194,9 +205,6 @@ var MIN_GHOST_DISTANCE = 100;
       this.paused = false;
       graphics.focus = this.sun;
 
-      // Helper vector that animate requires. Create it only once here and
-      // change it from animate as needed.
-      this.animationFocusVector = new THREE.Vector3();
       window.requestAnimationFrame(this.animate);
     }
   };
