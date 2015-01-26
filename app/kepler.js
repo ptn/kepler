@@ -159,9 +159,9 @@ document.getElementById('preload').onchange = function(e) {
   }
 };
 
-function togglePause() {
+document.getElementById("pauseButton").onclick = function() {
   animation.togglePause();
-}
+};
 
 document.getElementById("resetButton").onclick = function() {
   animation.destroy();
