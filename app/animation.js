@@ -168,7 +168,7 @@ var MIN_GHOST_DISTANCE = 100;
 
       graphics.render();
 
-      if (animation.sun && animation.paused === false) {
+      if (animation.sun && !animation.paused) {
         animation.sun.rotation.y += 0.05;
         animation.animationFocusVector.copy(graphics.focus.position);
 
